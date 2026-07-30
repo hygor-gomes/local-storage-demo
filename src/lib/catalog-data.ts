@@ -49,7 +49,7 @@ export const AREAS: Area[] = [
       "Peeling",
       "Microagulhamento",
       "Radiofrequência",
-llll    ],
+],
   },
   {
     id: "massagem",
