@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, ChevronUp, LogOut, Sparkles } from "lucide-react";
 import { AREAS, areaById, subKey, subLabel } from "@/lib/catalog-data";
 import { useCatalog } from "@/lib/use-catalog";
-import { CheckBox, Field, Hint, Stepper, inputClass } from "@/components/flow/ui";
+import { CheckBox, Hint, Stepper } from "@/components/flow/ui";
 import { StepCatalog } from "@/components/flow/step-catalog";
 
 export const Route = createFileRoute("/")({
