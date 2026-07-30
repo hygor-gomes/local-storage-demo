@@ -1,7 +1,3 @@
-# Workflow Demo
-
-preciso fazer uma página para subir em algum host gratuíto como o do github, por exemplo. neste arquivo, há as instruções. preciso apenas de uma página funcional com local storage para conseguir demonstrar o novo workflow proposto. dentro do arquivo, há um design a ser seguido e as instruções. caso seja necessário uma explicação, me avise.
-
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
