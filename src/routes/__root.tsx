@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "VemMimo — Novo fluxo de cadastro de serviços" },
+      { name: "description", content: "Protótipo navegável do novo fluxo de cadastro de serviços do profissional: áreas de atuação, subserviços, catálogo e publicação." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "VemMimo — Novo fluxo de cadastro de serviços" },
+      { property: "og:description", content: "Protótipo navegável do novo fluxo de cadastro de serviços do profissional: áreas de atuação, subserviços, catálogo e publicação." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "VemMimo — Novo fluxo de cadastro de serviços" },
+      { name: "twitter:description", content: "Protótipo navegável do novo fluxo de cadastro de serviços do profissional: áreas de atuação, subserviços, catálogo e publicação." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cc14dfdf-b2a5-4b55-ac58-07b7fa7508be/id-preview-cf69b2ac--c784a438-f8c9-4eb2-8b21-12a1115ad099.lovable.app-1785455185074.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/cc14dfdf-b2a5-4b55-ac58-07b7fa7508be/id-preview-cf69b2ac--c784a438-f8c9-4eb2-8b21-12a1115ad099.lovable.app-1785455185074.png" },
     ],
     links: [
       {

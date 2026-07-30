@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "VemMimo — Novo fluxo de cadastro de serviços" },
       {
         property: "og:description",
-        content: "Protótipo em 4 etapas para montar o catálogo de serviços do profissional.",
+        content: "Protótipo navegável do novo fluxo de cadastro de serviços do profissional: áreas de atuação, subserviços, catálogo e publicação.",
       },
     ],
   }),
