@@ -74,101 +74,8 @@ export function StepCatalog({ subs, services, onChange }: Props) {
 
   const extrasOptions = subs.filter((s) => s !== draft?.subKey).map(subLabel);
 
-  return (
-    <div>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="font-display text-2xl">3. Monte seu catálogo de serviços</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Crie, nomeie e configure todos os serviços que você oferece.
-          </p>
-        </div>
-        <button
-          onClick={() => setPreview((p) => !p)}
-          className="btn-ghost flex items-center gap-2 px-3 py-1.5 text-xs"
-        >
-          <Eye className="h-3.5 w-3.5" />
-          {preview ? "Voltar à edição" : "Ver como cliente verá"}
-        </button>
-      </div>
-
-      {preview ? (
-        <div className="mt-5 space-y-4">
-          {subs.map((sub) => (
-            <div key={sub} className="rounded-xl border border-border bg-surface p-4">
-              <p className="font-display text-lg">{subLabel(sub)}</p>
-              <ul className="mt-2 space-y-2">
-                {(bySub[sub] ?? []).map((s) => (
-                  <li key={s.id} className="flex justify-between border-b border-border/60 pb-2 text-sm">
-                    <span>
-                      {s.name}
-                      <span className="ml-2 text-xs text-muted-foreground">{s.duration}</span>
-                    </span>
-                    <span className="text-primary">{s.price || "—"}</span>
-                  </li>
-                ))}
-                {(bySub[sub] ?? []).length === 0 && (
-                  <li className="text-sm text-muted-foreground">Nenhum serviço cadastrado.</li>
-                )}
-              </ul>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="mt-5 grid gap-4 lg:grid-cols-[290px_1fr]">
-          <div className="rounded-xl border border-border bg-surface p-2">
-            {subs.map((sub) => {
-              const list = bySub[sub] ?? [];
-              const open = openSub === sub;
-              return (
-                <div key={sub} className="border-b border-border/60 last:border-0">
-                  <button
-                    onClick={() => setOpenSub(open ? null : sub)}
-                    className="flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left"
-                  >
-                    <span>
-                      <span className="block text-sm font-medium">{subLabel(sub)}</span>
-                      <span className="block text-xs text-muted-foreground">
-                        {list.length} serviço{list.length === 1 ? "" : "s"} cadastrado
-                        {list.length === 1 ? "" : "s"}
-                      </span>
-                    </span>
-                    {open ? (
-                      <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-                    )}
-                  </button>
-                  {open && (
-                    <div className="pb-2">
-                      {list.map((s) => (
-                        <button
-                          key={s.id}
-                          onClick={() => startEdit(s)}
-                          className={[
-                            "block w-full rounded-md px-3 py-2 text-left text-sm",
-                            editingId === s.id
-                              ? "bg-muted text-foreground"
-                              : "text-muted-foreground hover:bg-muted/60",
-                          ].join(" ")}
-                        >
-                          {s.name || "Sem nome"}
-                        </button>
-                      ))}
-                      <button
-                        onClick={() => startNew(sub)}
-                        className="btn-ghost mt-2 flex w-full items-center justify-center gap-1.5 px-3 py-2 text-xs"
-                      >
-                        <Plus className="h-3.5 w-3.5" /> Adicionar serviço
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="rounded-xl border border-border bg-surface p-4">
+  const editorBody = (
+    <>
             {!draft ? (
               <div className="flex h-full min-h-52 flex-col items-center justify-center gap-3 text-center text-sm text-muted-foreground">
                 <p>Selecione um serviço na lista ou crie um novo para configurá-lo.</p>
@@ -327,6 +234,110 @@ export function StepCatalog({ subs, services, onChange }: Props) {
                 </div>
               </div>
             )}
+    </>
+  );
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="font-display text-2xl">3. Monte seu catálogo de serviços</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Crie, nomeie e configure todos os serviços que você oferece.
+          </p>
+        </div>
+        <button
+          onClick={() => setPreview((p) => !p)}
+          className="btn-ghost flex items-center gap-2 px-3 py-1.5 text-xs"
+        >
+          <Eye className="h-3.5 w-3.5" />
+          {preview ? "Voltar à edição" : "Ver como cliente verá"}
+        </button>
+      </div>
+
+      {preview ? (
+        <div className="mt-5 space-y-4">
+          {subs.map((sub) => (
+            <div key={sub} className="rounded-xl border border-border bg-surface p-4">
+              <p className="font-display text-lg">{subLabel(sub)}</p>
+              <ul className="mt-2 space-y-2">
+                {(bySub[sub] ?? []).map((s) => (
+                  <li key={s.id} className="flex justify-between border-b border-border/60 pb-2 text-sm">
+                    <span>
+                      {s.name}
+                      <span className="ml-2 text-xs text-muted-foreground">{s.duration}</span>
+                    </span>
+                    <span className="text-primary">{s.price || "—"}</span>
+                  </li>
+                ))}
+                {(bySub[sub] ?? []).length === 0 && (
+                  <li className="text-sm text-muted-foreground">Nenhum serviço cadastrado.</li>
+                )}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-5 grid gap-4 lg:grid-cols-[290px_1fr]">
+          <div className="rounded-xl border border-border bg-surface p-2">
+            {subs.map((sub) => {
+              const list = bySub[sub] ?? [];
+              const open = openSub === sub;
+              return (
+                <div key={sub} className="border-b border-border/60 last:border-0">
+                  <button
+                    onClick={() => setOpenSub(open ? null : sub)}
+                    className="flex w-full items-center justify-between gap-2 px-3 py-2.5 text-left"
+                  >
+                    <span>
+                      <span className="block text-sm font-medium">{subLabel(sub)}</span>
+                      <span className="block text-xs text-muted-foreground">
+                        {list.length} serviço{list.length === 1 ? "" : "s"} cadastrado
+                        {list.length === 1 ? "" : "s"}
+                      </span>
+                    </span>
+                    {open ? (
+                      <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    )}
+                  </button>
+                  {open && (
+                    <div className="pb-2">
+                      {list.map((s) => (
+                        <button
+                          key={s.id}
+                          onClick={() => startEdit(s)}
+                          className={[
+                            "block w-full rounded-md px-3 py-2 text-left text-sm",
+                            editingId === s.id
+                              ? "bg-muted text-foreground"
+                              : "text-muted-foreground hover:bg-muted/60",
+                          ].join(" ")}
+                        >
+                          {s.name || "Sem nome"}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => startNew(sub)}
+                        className="btn-ghost mt-2 flex w-full items-center justify-center gap-1.5 px-3 py-2 text-xs"
+                      >
+                        <Plus className="h-3.5 w-3.5" /> Adicionar serviço
+                      </button>
+                      {draft && draft.subKey === sub && (
+                        <div className="mt-3 rounded-xl border border-border bg-background p-3 lg:hidden">
+                          {editorBody}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="hidden rounded-xl border border-border bg-surface p-4 lg:block">
+            {editorBody}
           </div>
         </div>
       )}
