@@ -414,20 +414,28 @@ export function StepCatalog({ subs, services, onChange }: Props) {
                   </button>
                   {open && (
                     <div className="pb-2">
-                      {list.map((s) => (
+                      {list.map((s) => {
+                        const t = serviceTotals(s);
+                        return (
                         <button
                           key={s.id}
                           onClick={() => startEdit(s)}
                           className={[
-                            "block w-full rounded-md px-3 py-2 text-left text-sm",
+                            "flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm",
                             editingId === s.id
                               ? "bg-muted text-foreground"
                               : "text-muted-foreground hover:bg-muted/60",
                           ].join(" ")}
                         >
-                          {s.name || "Sem nome"}
+                          <span className="truncate">{s.name || "Sem nome"}</span>
+                          <span className="shrink-0 text-right text-[11px] leading-tight">
+                            <span className="block text-muted-foreground">{t.duration}</span>
+                            <span className="block text-primary">{t.priceLabel}</span>
+                          </span>
                         </button>
-                      ))}
+                        );
+                      })}
+
                       <button
                         onClick={() => startNew(sub)}
                         className="btn-ghost mt-2 flex w-full items-center justify-center gap-1.5 px-3 py-2 text-xs"
