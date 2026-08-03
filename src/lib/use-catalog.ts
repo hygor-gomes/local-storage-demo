@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 
+export type CustomExtra = {
+  id: string;
+  name: string;
+  duration: string;
+  price: string;
+  description: string;
+};
+
 export type Service = {
   id: string;
   subKey: string;
@@ -10,8 +18,10 @@ export type Service = {
   atHome: boolean;
   atSalon: boolean;
   extras: string[];
+  customExtras?: CustomExtra[];
   interval: string;
 };
+
 
 export type CatalogState = {
   step: number;
