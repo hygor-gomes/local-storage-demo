@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, Plus, Trash2, Eye } from "lucide-react";
 import { DURATIONS, INTERVALS, subLabel } from "@/lib/catalog-data";
-import type { Service } from "@/lib/use-catalog";
+import type { CustomExtra, Service } from "@/lib/use-catalog";
+import { serviceTotals } from "@/lib/service-totals";
 import { Field, inputClass } from "./ui";
 
 type Props = {
@@ -21,9 +22,11 @@ function blank(subKey: string, id: string): Service {
     atSalon: true,
     atHome: false,
     extras: [],
+    customExtras: [],
     interval: "Sem intervalo",
   };
 }
+
 
 export function StepCatalog({ subs, services, onChange }: Props) {
   const [openSub, setOpenSub] = useState<string | null>(subs[0] ?? null);
