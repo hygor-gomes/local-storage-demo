@@ -221,6 +221,75 @@ export function StepCatalog({ subs, services, onChange }: Props) {
                   </div>
                 </Field>
 
+                <Field label="Serviços adicionais customizados (opcional)">
+                  <div className="space-y-3">
+                    {(draft.customExtras ?? []).map((ex) => (
+                      <div key={ex.id} className="rounded-lg border border-border bg-background p-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-xs text-muted-foreground">
+                            {ex.name || "Novo adicional"}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => updateExtras(draft.id, (list) => list.filter((i) => i.id !== ex.id))}
+                            className="text-muted-foreground hover:text-destructive"
+                            aria-label="Remover adicional"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                        <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                          <input
+                            className={inputClass}
+                            value={ex.name}
+                            placeholder="Nome do procedimento"
+                            onChange={(e) => patchExtra(ex.id, { name: e.target.value })}
+                          />
+                          <select
+                            className={inputClass}
+                            value={ex.duration}
+                            onChange={(e) => patchExtra(ex.id, { duration: e.target.value })}
+                          >
+                            {DURATIONS.map((d) => (
+                              <option key={d} value={d}>
+                                {d}
+                              </option>
+                            ))}
+                          </select>
+                          <input
+                            className={inputClass}
+                            value={ex.price}
+                            placeholder="R$ 40,00"
+                            onChange={(e) => patchExtra(ex.id, { price: e.target.value })}
+                          />
+                        </div>
+                        <textarea
+                          className={`${inputClass} mt-2 min-h-16 resize-y`}
+                          value={ex.description}
+                          placeholder="Descrição do adicional (opcional)"
+                          onChange={(e) => patchExtra(ex.id, { description: e.target.value })}
+                        />
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={addCustomExtra}
+                      className="btn-ghost flex items-center gap-1.5 px-3 py-2 text-xs"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> Adicionar serviço customizado
+                    </button>
+                  </div>
+                </Field>
+
+                <div className="flex items-center justify-between rounded-lg border border-primary/60 bg-background px-4 py-3 text-sm">
+                  <span className="text-muted-foreground">Total (serviço + adicionais)</span>
+                  <span className="text-primary">
+                    {serviceTotals(draft).duration} • {serviceTotals(draft).priceLabel}
+                  </span>
+                </div>
+
+
+
                 <div className="flex justify-end gap-2">
                   <button
                     onClick={() => {
