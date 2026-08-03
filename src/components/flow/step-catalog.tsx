@@ -375,9 +375,10 @@ export function StepCatalog({ subs, services, onChange }: Props) {
                   <li key={s.id} className="flex justify-between border-b border-border/60 pb-2 text-sm">
                     <span>
                       {s.name}
-                      <span className="ml-2 text-xs text-muted-foreground">{s.duration}</span>
+                      <span className="ml-2 text-xs text-muted-foreground">{serviceTotals(s).duration}</span>
                     </span>
-                    <span className="text-primary">{s.price || "—"}</span>
+                    <span className="text-primary">{serviceTotals(s).priceLabel}</span>
+
                   </li>
                 ))}
                 {(bySub[sub] ?? []).length === 0 && (
