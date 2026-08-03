@@ -75,7 +75,45 @@ export function StepCatalog({ subs, services, onChange }: Props) {
     }
   }
 
+  function addCustomExtra() {
+    setDraft((d) =>
+      d
+        ? {
+            ...d,
+            customExtras: [
+              ...(d.customExtras ?? []),
+              {
+                id: crypto.randomUUID(),
+                name: "",
+                duration: "30min",
+                price: "",
+                description: "",
+              } satisfies CustomExtra,
+            ],
+          }
+        : d,
+    );
+  }
+
+  function patchExtra(id: string, patch: Partial<CustomExtra>) {
+    setDraft((d) =>
+      d
+        ? {
+            ...d,
+            customExtras: (d.customExtras ?? []).map((e) => (e.id === id ? { ...e, ...patch } : e)),
+          }
+        : d,
+    );
+  }
+
+  function removeExtra(id: string) {
+    setDraft((d) =>
+      d ? { ...d, customExtras: (d.customExtras ?? []).filter((e) => e.id !== id) } : d,
+    );
+  }
+
   const extrasOptions = subs.filter((s) => s !== draft?.subKey).map(subLabel);
+
 
   const editorBody = (
     <>
