@@ -231,7 +231,7 @@ export function StepCatalog({ subs, services, onChange }: Props) {
                           </p>
                           <button
                             type="button"
-                            onClick={() => updateExtras(draft.id, (list) => list.filter((i) => i.id !== ex.id))}
+                            onClick={() => removeExtra(ex.id)}
                             className="text-muted-foreground hover:text-destructive"
                             aria-label="Remover adicional"
                           >
