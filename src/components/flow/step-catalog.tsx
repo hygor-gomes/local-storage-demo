@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, Plus, Trash2, Eye } from "lucide-react";
 import { DURATIONS, INTERVALS, subLabel } from "@/lib/catalog-data";
-import type { Service } from "@/lib/use-catalog";
+import type { CustomExtra, Service } from "@/lib/use-catalog";
+import { serviceTotals } from "@/lib/service-totals";
 import { Field, inputClass } from "./ui";
 
 type Props = {
@@ -21,9 +22,11 @@ function blank(subKey: string, id: string): Service {
     atSalon: true,
     atHome: false,
     extras: [],
+    customExtras: [],
     interval: "Sem intervalo",
   };
 }
+
 
 export function StepCatalog({ subs, services, onChange }: Props) {
   const [openSub, setOpenSub] = useState<string | null>(subs[0] ?? null);
@@ -72,7 +75,45 @@ export function StepCatalog({ subs, services, onChange }: Props) {
     }
   }
 
+  function addCustomExtra() {
+    setDraft((d) =>
+      d
+        ? {
+            ...d,
+            customExtras: [
+              ...(d.customExtras ?? []),
+              {
+                id: crypto.randomUUID(),
+                name: "",
+                duration: "30min",
+                price: "",
+                description: "",
+              } satisfies CustomExtra,
+            ],
+          }
+        : d,
+    );
+  }
+
+  function patchExtra(id: string, patch: Partial<CustomExtra>) {
+    setDraft((d) =>
+      d
+        ? {
+            ...d,
+            customExtras: (d.customExtras ?? []).map((e) => (e.id === id ? { ...e, ...patch } : e)),
+          }
+        : d,
+    );
+  }
+
+  function removeExtra(id: string) {
+    setDraft((d) =>
+      d ? { ...d, customExtras: (d.customExtras ?? []).filter((e) => e.id !== id) } : d,
+    );
+  }
+
   const extrasOptions = subs.filter((s) => s !== draft?.subKey).map(subLabel);
+
 
   const editorBody = (
     <>
@@ -218,6 +259,75 @@ export function StepCatalog({ subs, services, onChange }: Props) {
                   </div>
                 </Field>
 
+                <Field label="Serviços adicionais customizados (opcional)">
+                  <div className="space-y-3">
+                    {(draft.customExtras ?? []).map((ex) => (
+                      <div key={ex.id} className="rounded-lg border border-border bg-background p-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-xs text-muted-foreground">
+                            {ex.name || "Novo adicional"}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => removeExtra(ex.id)}
+                            className="text-muted-foreground hover:text-destructive"
+                            aria-label="Remover adicional"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                        <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                          <input
+                            className={inputClass}
+                            value={ex.name}
+                            placeholder="Nome do procedimento"
+                            onChange={(e) => patchExtra(ex.id, { name: e.target.value })}
+                          />
+                          <select
+                            className={inputClass}
+                            value={ex.duration}
+                            onChange={(e) => patchExtra(ex.id, { duration: e.target.value })}
+                          >
+                            {DURATIONS.map((d) => (
+                              <option key={d} value={d}>
+                                {d}
+                              </option>
+                            ))}
+                          </select>
+                          <input
+                            className={inputClass}
+                            value={ex.price}
+                            placeholder="R$ 40,00"
+                            onChange={(e) => patchExtra(ex.id, { price: e.target.value })}
+                          />
+                        </div>
+                        <textarea
+                          className={`${inputClass} mt-2 min-h-16 resize-y`}
+                          value={ex.description}
+                          placeholder="Descrição do adicional (opcional)"
+                          onChange={(e) => patchExtra(ex.id, { description: e.target.value })}
+                        />
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={addCustomExtra}
+                      className="btn-ghost flex items-center gap-1.5 px-3 py-2 text-xs"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> Adicionar serviço customizado
+                    </button>
+                  </div>
+                </Field>
+
+                <div className="flex items-center justify-between rounded-lg border border-primary/60 bg-background px-4 py-3 text-sm">
+                  <span className="text-muted-foreground">Total (serviço + adicionais)</span>
+                  <span className="text-primary">
+                    {serviceTotals(draft).duration} • {serviceTotals(draft).priceLabel}
+                  </span>
+                </div>
+
+
+
                 <div className="flex justify-end gap-2">
                   <button
                     onClick={() => {
@@ -265,9 +375,10 @@ export function StepCatalog({ subs, services, onChange }: Props) {
                   <li key={s.id} className="flex justify-between border-b border-border/60 pb-2 text-sm">
                     <span>
                       {s.name}
-                      <span className="ml-2 text-xs text-muted-foreground">{s.duration}</span>
+                      <span className="ml-2 text-xs text-muted-foreground">{serviceTotals(s).duration}</span>
                     </span>
-                    <span className="text-primary">{s.price || "—"}</span>
+                    <span className="text-primary">{serviceTotals(s).priceLabel}</span>
+
                   </li>
                 ))}
                 {(bySub[sub] ?? []).length === 0 && (
@@ -304,20 +415,28 @@ export function StepCatalog({ subs, services, onChange }: Props) {
                   </button>
                   {open && (
                     <div className="pb-2">
-                      {list.map((s) => (
+                      {list.map((s) => {
+                        const t = serviceTotals(s);
+                        return (
                         <button
                           key={s.id}
                           onClick={() => startEdit(s)}
                           className={[
-                            "block w-full rounded-md px-3 py-2 text-left text-sm",
+                            "flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm",
                             editingId === s.id
                               ? "bg-muted text-foreground"
                               : "text-muted-foreground hover:bg-muted/60",
                           ].join(" ")}
                         >
-                          {s.name || "Sem nome"}
+                          <span className="truncate">{s.name || "Sem nome"}</span>
+                          <span className="shrink-0 text-right text-[11px] leading-tight">
+                            <span className="block text-muted-foreground">{t.duration}</span>
+                            <span className="block text-primary">{t.priceLabel}</span>
+                          </span>
                         </button>
-                      ))}
+                        );
+                      })}
+
                       <button
                         onClick={() => startNew(sub)}
                         className="btn-ghost mt-2 flex w-full items-center justify-center gap-1.5 px-3 py-2 text-xs"

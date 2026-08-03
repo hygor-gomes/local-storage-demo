@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, ChevronDown, ChevronUp, LogOut, Sparkles } from "lucide-react";
 import { AREAS, areaById, subKey, subLabel } from "@/lib/catalog-data";
 import { useCatalog } from "@/lib/use-catalog";
+import { serviceTotals } from "@/lib/service-totals";
+
 import { CheckBox, Hint, Stepper } from "@/components/flow/ui";
 import { StepCatalog } from "@/components/flow/step-catalog";
 
@@ -220,12 +222,15 @@ export function RegistrationFlow() {
                       </summary>
                       <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
                         {svc.map((s) => (
-                          <li key={s.id} className="flex justify-between">
+                          <li key={s.id} className="flex justify-between gap-2">
                             <span>
                               {subLabel(s.subKey)} — {s.name}
                             </span>
-                            <span>{s.price || "—"}</span>
+                            <span className="shrink-0">
+                              {serviceTotals(s).duration} • {serviceTotals(s).priceLabel}
+                            </span>
                           </li>
+
                         ))}
                         {svc.length === 0 && <li>Nenhum serviço cadastrado nesta área.</li>}
                       </ul>
